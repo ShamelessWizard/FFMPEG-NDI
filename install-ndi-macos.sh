@@ -38,7 +38,7 @@ mkdir -p "$INCLUDE_DIR"
 mkdir -p "$LIB_DIR"
 
 # Copy headers
-cp "$NDI_SDK_DIR"/include/* "$INCLUDE_DIR"/
+cp -p "$NDI_SDK_DIR"/include/* "$INCLUDE_DIR"/
 echo "  Headers installed to $INCLUDE_DIR/"
 
 # Copy libraries
