@@ -2,6 +2,8 @@
 
 Builds FFMPEG with NDI enabled
 
+## Linux
+
 ### Download required installation files
 
 Make sure git is installed.
@@ -78,7 +80,7 @@ Extract the downloaded NDI Advanced SDK .tar file and copy it to the ffmpeg dire
 sudo bash ../FFMPEG-NDI/install-ndi-generic-armhf.sh
 ```
 
-## Build and Install FFMPEG
+### Build and Install FFMPEG (Linux)
 The following is the bare minimum needed for sending and receiving NDI and more options can be added for a more feature filled FFMPEG build.
 ```
 ./configure --enable-nonfree --enable-libndi_newtek
@@ -87,6 +89,74 @@ sudo make install
 ```
 Installation is now complete
 
+---
+
+## macOS
+
+### Prerequisites
+
+Install [Homebrew](https://brew.sh) if you don't have it, then clone the repositories:
+
+```
+git clone https://github.com/lplassman/FFMPEG-NDI.git
+git clone https://git.ffmpeg.org/ffmpeg.git && cd ffmpeg
+git checkout n5.1
+```
+
+### Install the NDI SDK for Apple
+
+Download and install the NDI SDK for Apple from [ndi.video](https://ndi.video/for-developers/ndi-sdk/download/). The installer places files in `/Library/NDI SDK for Apple/` by default.
+
+### Apply Patches
+
+```
+git config user.email "you@example.com"
+git am ../FFMPEG-NDI/libndi.patch
+cp ../FFMPEG-NDI/libavdevice/libndi_newtek_* libavdevice/
+```
+
+### Install build prerequisites
+
+```
+bash ../FFMPEG-NDI/preinstall-macos.sh
+```
+
+### Install NDI libraries to system paths
+
+This copies headers and libraries from the NDI SDK to `/usr/local/` so FFmpeg's configure can find them:
+
+```
+sudo bash ../FFMPEG-NDI/install-ndi-macos.sh
+```
+
+### Apply mathops patch (Intel Macs only)
+
+If building on an Intel Mac, apply the clang inline assembly fix:
+
+```
+git am ../FFMPEG-NDI/mathops.patch
+```
+
+This patch is not needed on Apple Silicon (ARM64) Macs.
+
+### Build and Install FFMPEG (macOS)
+
+```
+./configure --enable-nonfree --enable-libndi_newtek
+make -j $(sysctl -n hw.ncpu)
+sudo make install
+```
+
+If the NDI headers or libraries are not found, you can specify their paths explicitly:
+
+```
+./configure --enable-nonfree --enable-libndi_newtek \
+    --extra-cflags="-I/Library/NDI SDK for Apple/include" \
+    --extra-ldflags="-L/Library/NDI SDK for Apple/lib/macOS"
+```
+
+---
+
 ## Usage for FFMPEG with NDI
 
 List all sources on the network
@@ -94,9 +164,14 @@ List all sources on the network
 ffmpeg -f libndi_newtek -find_sources 1 -i dummy
 ```
 
-Stream a webcam to NDI
+Stream a webcam to NDI (Linux)
 ```
 ffmpeg -f v4l2 -framerate 30 -video_size 1280x720 -pixel_format mjpeg -i /dev/video1 -f libndi_newtek -pix_fmt uyvy422 CameraOut
+```
+
+Stream a webcam to NDI (macOS)
+```
+ffmpeg -f avfoundation -framerate 30 -video_size 1280x720 -i "0" -f libndi_newtek -pix_fmt uyvy422 CameraOut
 ```
 
 Monitor a NDI stream
