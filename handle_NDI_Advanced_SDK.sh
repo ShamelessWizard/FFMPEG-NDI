@@ -1,4 +1,6 @@
 #!/usr/bin/env sh
 
-#extract Advanced NDI SDK
-yes y | bash ./Install_NDI_Advanced_SDK_v5_Linux.sh > /dev/null
+set -eu
+
+# Extract Advanced NDI 6 SDK
+yes y | bash ./Install_NDI_Advanced_SDK_v6_Linux.sh > /dev/null

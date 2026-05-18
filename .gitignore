@@ -1,0 +1,9 @@
+# Build output - lives in the FFmpeg source tree, not here
+dist/
+ 
+# macOS
+.DS_Store
+ 
+# Windows
+Thumbs.db
+ 
