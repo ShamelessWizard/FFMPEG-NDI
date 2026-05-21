@@ -24,7 +24,7 @@ set MSYSTEM=MINGW64
 
 echo.
 echo [INFO] Installing MinGW-w64 toolchain and FFmpeg dependencies...
-"%BASH%" --login -c "pacman -S --noconfirm --needed base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-nasm mingw-w64-x86_64-yasm mingw-w64-x86_64-pkg-config mingw-w64-x86_64-binutils mingw-w64-x86_64-x264 mingw-w64-x86_64-x265 mingw-w64-x86_64-lame mingw-w64-x86_64-opus mingw-w64-x86_64-libvorbis mingw-w64-x86_64-libvpx mingw-w64-x86_64-freetype mingw-w64-x86_64-libass git"
+"%BASH%" --login -c "pacman -S --noconfirm --needed base-devel mingw-w64-x86_64-toolchain mingw-w64-x86_64-nasm mingw-w64-x86_64-yasm mingw-w64-x86_64-pkg-config mingw-w64-x86_64-binutils mingw-w64-x86_64-x264 mingw-w64-x86_64-x265 mingw-w64-x86_64-lame mingw-w64-x86_64-opus mingw-w64-x86_64-libvorbis mingw-w64-x86_64-libvpx mingw-w64-x86_64-freetype mingw-w64-x86_64-libass mingw-w64-x86_64-libsrt mingw-w64-x86_64-openssl git"
 
 echo.
 echo [INFO] Installing static build dependencies for freetype2 and libass...

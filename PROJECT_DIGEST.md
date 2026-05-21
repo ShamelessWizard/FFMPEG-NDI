@@ -76,6 +76,13 @@ Output lands in: C:\git\FFmpeg\dist\ffmpeg-ndi-YYYYMMDD-HHMMSS\
 - gendef + dlltool generates MinGW libndi.a from NDI DLL
 - --ld=g++ required for C++ runtime (harfbuzz/graphite2 are C++ libs)
 - --pkg-config-flags=--static for static deps
+- A/53 closed caption pass-through: built into mpeg2video encoder upstream since
+  commit 45daaf2c (May 2025) — no configure flag needed. Use -a53cc 1 at runtime
+  (it is already the encoder default). CC data from H.264 SEI is re-embedded in
+  MPEG-2 user_data automatically.
+- SRT input: --enable-libsrt (requires mingw-w64-x86_64-libsrt via setup-msys2-ffmpeg.bat)
+- HTTPS: --enable-openssl (required for HLS sources over HTTPS, e.g. Akamai CDN)
+  (requires mingw-w64-x86_64-openssl via setup-msys2-ffmpeg.bat)
 - Hardware acceleration (default):
   NVENC/NVDEC: --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-cuvid
   AMF: --enable-amf

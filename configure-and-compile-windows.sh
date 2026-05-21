@@ -44,6 +44,8 @@ echo "[INFO] pkg-config vorbis    : $(pkg-config --modversion vorbis     2>/dev/
 echo "[INFO] pkg-config vpx       : $(pkg-config --modversion vpx        2>/dev/null || echo 'NOT FOUND')"
 echo "[INFO] pkg-config freetype2 : $(pkg-config --modversion freetype2  2>/dev/null || echo 'NOT FOUND')"
 echo "[INFO] pkg-config libass    : $(pkg-config --modversion libass     2>/dev/null || echo 'NOT FOUND')"
+echo "[INFO] pkg-config srt       : $(pkg-config --modversion srt        2>/dev/null || echo 'NOT FOUND - run: pacman -S mingw-w64-x86_64-libsrt')"
+echo "[INFO] pkg-config openssl   : $(pkg-config --modversion openssl    2>/dev/null || echo 'NOT FOUND - run: pacman -S mingw-w64-x86_64-openssl')"
 echo ""
 echo "[INFO] If any show NOT FOUND, run: pacman -S mingw-w64-x86_64-<package>"
 echo "" 
@@ -113,6 +115,8 @@ PKG_CONFIG_LIBDIR="$WORK/pkgconfig:/mingw64/lib/pkgconfig:/mingw64/share/pkgconf
     --enable-libndi_newtek \
     --enable-gpl \
     --enable-version3 \
+    --enable-openssl \
+    --enable-libsrt \
     --enable-libx264 \
     --enable-libx265 \
     --enable-ffnvcodec \
