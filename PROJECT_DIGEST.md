@@ -87,6 +87,11 @@ Output lands in: C:\git\FFmpeg\dist\ffmpeg-ndi-YYYYMMDD-HHMMSS\
   NVENC/NVDEC: --enable-ffnvcodec --enable-nvdec --enable-nvenc --enable-cuvid
   AMF: --enable-amf
   Intel QSV: not enabled - oneVPL not available via pacman
+- bin2c HOST TOOL WORKAROUND (GCC 14+): GCC 14+ on MSYS2 places host-tool
+  data sections above the 2GB mark, causing "relocation truncated to fit:
+  R_X86_64_32" when linking bin2c.exe. Fix: --host-cflags="-mcmodel=medium"
+  switches host-compiled tools to the medium code model which uses 64-bit
+  (R_X86_64_64) relocations for large data, eliminating the truncation.
 - x264 WORKAROUND: MSYS2 x264.pc has -DX264_API_IMPORTS in Cflags which
   forces DLL import mode even when linking statically. Cflags.private has
   -UX264_API_IMPORTS but pkg-config --static does NOT include Cflags.private

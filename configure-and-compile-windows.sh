@@ -128,6 +128,7 @@ PKG_CONFIG_LIBDIR="$WORK/pkgconfig:/mingw64/lib/pkgconfig:/mingw64/share/pkgconf
     --disable-shared \
     --extra-cflags="-I${NDI_INC_SAFE}" \
     --ld="g++" \
+    --host-cflags="-mcmodel=medium" \
     --pkg-config-flags="--static" \
     --extra-ldflags="-L${WORK} -static -static-libgcc -static-libstdc++" \
     --extra-libs="-lndi -lpsapi -lole32 -lstrmiids -luuid -loleaut32 -lshlwapi -lpthread"
