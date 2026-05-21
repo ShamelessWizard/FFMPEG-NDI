@@ -26,6 +26,36 @@ function To-Posix($p) {
 $srcPosix   = To-Posix ($PWD.Path)
 $patchPosix = To-Posix $PATCH
 
+# Files created new by the patch (not in FFmpeg git — just delete them)
+$newFiles = @(
+    "libavdevice\libndi_newtek_common.h",
+    "libavdevice\libndi_newtek_dec.c",
+    "libavdevice\libndi_newtek_enc.c"
+)
+
+# Files modified by the patch (restore via git checkout)
+$modFiles = @(
+    "configure",
+    "libavdevice/alldevices.c",
+    "libavdevice/Makefile",
+    "doc/indevs.texi",
+    "doc/outdevs.texi"
+)
+
+if (Test-Path "libavdevice\libndi_newtek_dec.c") {
+    Write-Host "[INFO] Previous patch application detected — cleaning up before re-applying..."
+    foreach ($f in $newFiles) {
+        if (Test-Path $f) { Remove-Item $f -Force; Write-Host "[INFO]   Removed $f" }
+    }
+    $env:MSYSTEM = "MINGW64"
+    & $BASH --login -c "cd '$srcPosix' && git checkout -- $($modFiles -join ' ')"
+    if ($LASTEXITCODE -ne 0) {
+        Write-Host "[ERROR] git checkout failed. Ensure you are running from the FFmpeg git repo root."
+        exit 1
+    }
+    Write-Host "[INFO] Cleanup complete."
+}
+
 Write-Host "[INFO] Applying libndi.patch to $PWD ..."
 $env:MSYSTEM = "MINGW64"
 & $BASH --login -c "cd '$srcPosix' && patch -p1 --fuzz=5 < '$patchPosix'"
