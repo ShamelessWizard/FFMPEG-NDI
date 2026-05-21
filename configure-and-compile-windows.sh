@@ -100,12 +100,19 @@ echo ""
 echo "[STEP 2] Configuring FFmpeg..."
 cd "$FFMPEG_SRC"
 
+# A/53 closed caption pass-through is built into the mpeg2video encoder with no
+# separate configure flag (upstream since commit 45daaf2c, May 2025). Use -a53cc 1
+# (the encoder default) when transcoding to mpeg2video — CC data from H.264 SEI
+# or MPEG-2 user_data on the input is automatically re-embedded in the output.
+# --enable-version3 is required alongside --enable-gpl when OpenSSL >=3.0 is
+# linked; included here as standard practice.
 PKG_CONFIG_PATH="$WORK/pkgconfig:/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig" \
 PKG_CONFIG_LIBDIR="$WORK/pkgconfig:/mingw64/lib/pkgconfig:/mingw64/share/pkgconfig" \
 ./configure \
     --enable-nonfree \
     --enable-libndi_newtek \
     --enable-gpl \
+    --enable-version3 \
     --enable-libx264 \
     --enable-libx265 \
     --enable-ffnvcodec \
