@@ -43,7 +43,7 @@ $modFiles = @(
 )
 
 if (Test-Path "libavdevice\libndi_newtek_dec.c") {
-    Write-Host "[INFO] Previous patch application detected — cleaning up before re-applying..."
+    Write-Host "[INFO] Previous patch application detected - cleaning up before re-applying..."
     foreach ($f in $newFiles) {
         if (Test-Path $f) { Remove-Item $f -Force; Write-Host "[INFO]   Removed $f" }
     }
