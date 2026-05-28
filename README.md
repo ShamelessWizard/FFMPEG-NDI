@@ -92,7 +92,7 @@ Choose the script for your CPU architecture:
 sudo bash ../FFMPEG-NDI/install-ndi-x86_64.sh
 ```
 
-This downloads the NDI 6 SDK and installs headers to `/usr/local/include/` and the shared library to `/usr/local/lib/`.
+This installs NDI 6 SDK headers to `/usr/local/include/` and the shared library to `/usr/local/lib/`. It also ensures `/usr/local/lib` is registered with `ldconfig` so that `ffmpeg` can find `libndi.so.6` at runtime without any `LD_LIBRARY_PATH` wrapper.
 
 #### Raspberry Pi 4 — 64-bit (aarch64)
 
@@ -124,29 +124,36 @@ sudo bash ../FFMPEG-NDI/install-ndi-generic-aarch64.sh
 sudo bash ../FFMPEG-NDI/install-ndi-generic-armhf.sh
 ```
 
-### 5. Build and install FFmpeg (Linux)
-
-The minimal configuration for NDI send and receive:
+### 5. Build FFmpeg with NDI
 
 ```bash
-./configure --enable-nonfree --enable-libndi_newtek
-make -j$(nproc)
-sudo make install
+../FFMPEG-NDI/build-linux.sh
 ```
 
-If the NDI headers or library are not found automatically:
+This script:
+
+1. Validates that the NDI SDK is installed at `/usr/local/`
+2. Auto-detects available optional libraries (x264, x265, SRT, NVIDIA NVENC/NVDEC)
+3. Runs `./configure` with `--enable-nonfree --enable-libndi_newtek --enable-gpl --enable-version3 --enable-openssl` plus any detected optional flags
+4. Runs `make -j$(nproc)`
+5. Packages `ffmpeg`, `ffprobe`, `ffplay`, and `libndi.so.6` into `dist/ffmpeg-ndi-YYYYMMDD-HHMMSS/`
+
+To clean before a fresh build:
 
 ```bash
-./configure --enable-nonfree --enable-libndi_newtek \
-    --extra-cflags="-I/usr/local/include" \
-    --extra-ldflags="-L/usr/local/lib"
-make -j$(nproc)
-sudo make install
+../FFMPEG-NDI/build-linux.sh --distclean
 ```
 
-After installing, update the dynamic linker cache:
+**Quick test after build:**
+```bash
+cd dist/ffmpeg-ndi-<timestamp>
+./ffmpeg -f libndi_newtek -find_sources 1 -i dummy
+```
+
+#### Optional: install system-wide
 
 ```bash
+sudo make install
 sudo ldconfig
 ```
 
